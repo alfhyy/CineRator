@@ -1,2 +1,1 @@
 # CineRator
-##Movie rating app
