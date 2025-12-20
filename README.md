@@ -1,7 +1,7 @@
 # 🎬 CineRator
 
 App built wiwth Java 21 and Swing, what does it do??? Rating, review ur fav movies.
-
+rate 1-5 and share personal opinions, designed for simplicity, lightweight, and offline use. Using intuitive Swinng interface , user can browse movies view average ratings, and read community reviews.
 ---
 
 ## ✨ Features
@@ -39,5 +39,5 @@ App built wiwth Java 21 and Swing, what does it do??? Rating, review ur fav movi
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/movie-rating-app.git
+   git clone https://github.com/alfhyy/CineRator.git
    cd movie-rating-app
