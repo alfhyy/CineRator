@@ -13,7 +13,7 @@ public class Main {
         // 1. Setup Error Catcher (Safety Net)
         // This forces any hidden UI crashes to print to the console
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            System.err.println("!!! GUI ERROR !!!");
+            System.err.println("!!! GUI ERRO !!!");
             e.printStackTrace();
         });
 
