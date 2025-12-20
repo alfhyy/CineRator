@@ -1,25 +1,20 @@
 package cinerator.model;
 
 public class Rating {
-    private String movieId;
     private String userId;
-    private int score; // 1–5
+    private String movieId; // Changed from title to ID for better linking
+    private double rating;   // Renamed from 'value' to 'rating' to match getter
+    private String comment; // Added for the review text
 
-    public Rating(String movieId, String userId, int score) {
-        this.movieId = movieId;
+    public Rating(String userId, String movieId, double rating, String comment) {
         this.userId = userId;
-        this.score = score;
+        this.movieId = movieId;
+        this.rating = rating;
+        this.comment = comment;
     }
 
-    public String getMovieId() {
-        return movieId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public int getScore() {
-        return score;
-    }
+    public String getUserId() { return userId; }
+    public String getMovieId() { return movieId; }
+    public double getRating() { return rating; }
+    public String getComment() { return comment; }
 }

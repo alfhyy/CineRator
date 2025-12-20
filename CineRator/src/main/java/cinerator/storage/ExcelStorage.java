@@ -1,153 +1,212 @@
 package cinerator.storage;
 
-import cinerator.model.*;
+import cinerator.model.Movie;
+import cinerator.model.Rating;
+import cinerator.model.User;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExcelStorage {
 
-    public ExcelStorage() {
-        initFile();
+    private Workbook openWorkbook() throws IOException {
+        return StorageManager.openWorkbook();
     }
 
-    /* ================= INIT ================= */
+    // --- USER METHODS ---
 
-    private void initFile() {
-        if (StorageManager.EXCEL_FILE.exists()) return;
+    // [FIXED] Added this method back
+    public void saveUser(User user) {
+        try (Workbook wb = openWorkbook()) {
+            Sheet sheet = wb.getSheet(StorageManager.USER_SHEET);
+            if (sheet == null) return;
 
-        try (Workbook wb = new XSSFWorkbook()) {
-            wb.createSheet(StorageManager.MOVIE_SHEET);
-            wb.createSheet(StorageManager.USER_SHEET);
-            wb.createSheet(StorageManager.RATING_SHEET);
+            int lastRow = sheet.getLastRowNum() + 1;
+            Row row = sheet.createRow(lastRow);
 
-            try (FileOutputStream fos = new FileOutputStream(StorageManager.EXCEL_FILE)) {
-                wb.write(fos);
-            }
+            row.createCell(0).setCellValue(user.getId());
+            row.createCell(1).setCellValue(user.getUsername());
+            row.createCell(2).setCellValue(user.getPassword());
+
+            StorageManager.saveWorkbook(wb);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    private Workbook openWorkbook() throws IOException {
-        return new XSSFWorkbook(new FileInputStream(StorageManager.EXCEL_FILE));
-    }
-
-    /* ================= USERS ================= */
 
     public User findUserByUsername(String username) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.USER_SHEET);
-            for (Row row : sheet) {
-                if (row.getCell(1) != null &&
-                        row.getCell(1).getStringCellValue().equals(username)) {
+            if (sheet == null) return null;
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+                Cell userCell = row.getCell(1);
+                if (userCell != null && userCell.getStringCellValue().equals(username)) {
                     return new User(
-                            row.getCell(0).getStringCellValue(),
-                            row.getCell(1).getStringCellValue()
+                            getCellValue(row, 0),
+                            getCellValue(row, 1),
+                            getCellValue(row, 2)
                     );
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
         return null;
     }
 
-    public void saveUser(User user) {
-        try (Workbook wb = openWorkbook()) {
-            Sheet sheet = wb.getSheet(StorageManager.USER_SHEET);
-            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+    // --- MOVIE METHODS ---
 
-            row.createCell(0).setCellValue(user.getId());
-            row.createCell(1).setCellValue(user.getUsername());
-
-            saveWorkbook(wb);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /* ================= MOVIES ================= */
-
-    public List<Movie> loadMovies() {
-        List<Movie> movies = new ArrayList<>();
-
+    public void saveMovie(String title, String genre, String imageUrl, String initialRating) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.MOVIE_SHEET);
-            for (Row row : sheet) {
-                if (row.getCell(0) == null) continue;
+            int lastRow = sheet.getLastRowNum() + 1;
+            Row row = sheet.createRow(lastRow);
+
+            String id = String.valueOf(System.currentTimeMillis());
+
+            row.createCell(0).setCellValue(id);
+            row.createCell(1).setCellValue(title);
+            row.createCell(2).setCellValue(genre);
+            row.createCell(3).setCellValue(imageUrl);
+            row.createCell(4).setCellValue(initialRating);
+
+            StorageManager.saveWorkbook(wb);
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public List<Movie> loadAllMovies() {
+        List<Movie> movies = new ArrayList<>();
+        try (Workbook wb = openWorkbook()) {
+            Sheet sheet = wb.getSheet(StorageManager.MOVIE_SHEET);
+            if (sheet == null) return movies;
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
 
                 movies.add(new Movie(
-                        row.getCell(0).getStringCellValue(),
-                        row.getCell(1).getStringCellValue(),
-                        row.getCell(2).getStringCellValue()
+                        getCellValue(row, 0), // id
+                        getCellValue(row, 1), // title
+                        getCellValue(row, 2), // genre
+                        getCellValue(row, 3), // imageUrl
+                        getCellValue(row, 4)  // global rating
                 ));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
         return movies;
     }
 
-    public void saveMovie(Movie movie) {
-        try (Workbook wb = openWorkbook()) {
-            Sheet sheet = wb.getSheet(StorageManager.MOVIE_SHEET);
-            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+    // --- RATING METHODS ---
 
-            row.createCell(0).setCellValue(movie.getId());
-            row.createCell(1).setCellValue(movie.getTitle());
-            row.createCell(2).setCellValue(movie.getGenre());
-
-            saveWorkbook(wb);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /* ================= RATINGS ================= */
-
-    public List<Rating> loadRatings() {
-        List<Rating> ratings = new ArrayList<>();
-
+    public void saveRating(String userId, String movieId, double ratingVal, String comment) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.RATING_SHEET);
-            for (Row row : sheet) {
-                if (row.getCell(0) == null) continue;
+            boolean updated = false;
 
-                ratings.add(new Rating(
-                        row.getCell(0).getStringCellValue(),
-                        row.getCell(1).getStringCellValue(),
-                        (int) row.getCell(2).getNumericCellValue()
-                ));
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                String rUser = getCellValue(row, 0);
+                String rMovieId = getCellValue(row, 1);
+
+                if (rUser.equals(userId) && rMovieId.equals(movieId)) {
+                    // Update existing row
+                    row.getCell(2).setCellValue(ratingVal);
+                    Cell commentCell = row.getCell(3);
+                    if (commentCell == null) commentCell = row.createCell(3);
+                    commentCell.setCellValue(comment);
+                    updated = true;
+                    break;
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ratings;
+
+            if (!updated) {
+                // Create new row
+                int lastRow = sheet.getLastRowNum() + 1;
+                Row row = sheet.createRow(lastRow);
+                row.createCell(0).setCellValue(userId);
+                row.createCell(1).setCellValue(movieId);
+                row.createCell(2).setCellValue(ratingVal);
+                row.createCell(3).setCellValue(comment);
+            }
+
+            StorageManager.saveWorkbook(wb);
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
-    public void saveRating(Rating rating) {
+    public Rating getRating(String userId, String movieId) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.RATING_SHEET);
-            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+            if (sheet == null) return null;
 
-            row.createCell(0).setCellValue(rating.getMovieId());
-            row.createCell(1).setCellValue(rating.getUserId());
-            row.createCell(2).setCellValue(rating.getScore());
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
 
-            saveWorkbook(wb);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                String rUser = getCellValue(row, 0);
+                String rMovieId = getCellValue(row, 1);
+
+                if (rUser.equals(userId) && rMovieId.equals(movieId)) {
+                    double val = row.getCell(2).getNumericCellValue();
+                    String comment = getCellValue(row, 3);
+                    return new Rating(userId, movieId, val, comment);
+                }
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+        return null;
     }
 
-    /* ================= UTIL ================= */
+    public List<String> getUserRatedMovieIds(String userId) {
+        List<String> ratedIds = new ArrayList<>();
+        try (Workbook wb = openWorkbook()) {
+            Sheet sheet = wb.getSheet(StorageManager.RATING_SHEET);
+            if (sheet == null) return ratedIds;
 
-    private void saveWorkbook(Workbook wb) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(StorageManager.EXCEL_FILE)) {
-            wb.write(fos);
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                String rUser = getCellValue(row, 0);
+                if (rUser.equals(userId)) {
+                    ratedIds.add(getCellValue(row, 1));
+                }
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+        return ratedIds;
+    }
+
+    public void deleteRating(String userId, String movieId) {
+        try (Workbook wb = openWorkbook()) {
+            Sheet sheet = wb.getSheet(StorageManager.RATING_SHEET);
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    String rUser = getCellValue(row, 0);
+                    String rMovieId = getCellValue(row, 1);
+
+                    if (rUser.equals(userId) && rMovieId.equals(movieId)) {
+                        sheet.removeRow(row);
+                        if (i < sheet.getLastRowNum()) {
+                            sheet.shiftRows(i + 1, sheet.getLastRowNum(), -1);
+                        }
+                        StorageManager.saveWorkbook(wb);
+                        return;
+                    }
+                }
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    // Helper to safely get cell values as String
+    private String getCellValue(Row row, int index) {
+        Cell cell = row.getCell(index);
+        if (cell == null) return "";
+        if (cell.getCellType() == CellType.NUMERIC) {
+            return String.valueOf(cell.getNumericCellValue());
         }
+        return cell.getStringCellValue();
     }
 }

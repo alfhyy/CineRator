@@ -13,11 +13,25 @@ public class UserService {
         this.storage = storage;
     }
 
-    public User login(String username) {
-        User user = storage.findUserByUsername(username);
-        if (user != null) return user;
+    public User login(String username, String password) {
 
-        User newUser = new User(UUID.randomUUID().toString(), username);
+        User user = storage.findUserByUsername(username);
+
+        // existing user → validate password
+        if (user != null) {
+            if (user.getPassword().equals(password)) {
+                return user;
+            }
+            return null; // wrong password
+        }
+
+        // new user → auto register
+        User newUser = new User(
+                UUID.randomUUID().toString(),
+                username,
+                password
+        );
+
         storage.saveUser(newUser);
         return newUser;
     }
