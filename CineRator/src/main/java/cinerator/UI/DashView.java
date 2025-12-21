@@ -1,7 +1,7 @@
 package cinerator.ui;
 
 import cinerator.AppController;
-import cinerator.model.Movie; // Updated Import
+import cinerator.model.Movie;
 import cinerator.model.User;
 
 import javax.swing.*;
@@ -9,11 +9,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DashView extends JFrame {
@@ -21,13 +21,10 @@ public class DashView extends JFrame {
     private final AppController controller;
     private final User user;
 
-    //add opan
+    // Search & Grid
     private JTextField searchField;
     private JPanel grid;
     private List<Movie> cachedMovies;
-
-
-
     private JPanel contentArea;
 
     // --- COLOR PALETTE ---
@@ -77,25 +74,21 @@ public class DashView extends JFrame {
         JPanel page = new JPanel(new BorderLayout());
         page.setBackground(MAIN_BG);
 
-        // FIX 1: Create header and expose searchField
+        // Create Header with Search
         JPanel header = createHeader("Community Movie List");
         page.add(header, BorderLayout.NORTH);
 
-        // FIX 2: Attach live search listener to searchField
+        // Live Search Listener
         searchField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { filterMovies(); } // new *
-            public void removeUpdate(DocumentEvent e) { filterMovies(); } // new *
-            public void changedUpdate(DocumentEvent e) { filterMovies(); } // new *
+            public void insertUpdate(DocumentEvent e) { filterMovies(); }
+            public void removeUpdate(DocumentEvent e) { filterMovies(); }
+            public void changedUpdate(DocumentEvent e) { filterMovies(); }
         });
 
-        // FIX 3: Cache full movie list for filtering
-        cachedMovies = controller.getAllMovies(); // new *
-
-        // FIX 4: Make grid reusable for updates
-        grid = createGrid(); // new *
-
-        // FIX 5: Populate grid with full movie list
-        updateGrid(cachedMovies); // replaces manual loop below
+        // Cache Movies & Create Grid
+        cachedMovies = controller.getAllMovies();
+        grid = createGrid();
+        updateGrid(cachedMovies);
 
         // Wrapper to prevent vertical stretching
         JPanel gridWrapper = new JPanel(new BorderLayout());
@@ -109,30 +102,43 @@ public class DashView extends JFrame {
         page.add(scroll, BorderLayout.CENTER);
         switchPage(page);
     }
+
+    // --- SEARCH LOGIC (Local Filtering) ---
     private void filterMovies() {
-        String query = searchField.getText();
-        List<Movie> filtered = controller.searchMovies(query); // new *
-        updateGrid(filtered); // new *
+        String query = searchField.getText().trim().toLowerCase();
+
+        // If search is empty or default text, show all
+        if (query.isEmpty() || query.equals("search movies...")) {
+            updateGrid(cachedMovies);
+            return;
+        }
+
+        // Filter the cached list
+        List<Movie> filtered = new ArrayList<>();
+        for (Movie m : cachedMovies) {
+            if (m.getTitle().toLowerCase().contains(query) ||
+                    m.getGenre().toLowerCase().contains(query)) {
+                filtered.add(m);
+            }
+        }
+        updateGrid(filtered);
     }
 
-    //add opann
     private void updateGrid(List<Movie> movies) {
         grid.removeAll();
         if (movies.isEmpty()) {
-            JLabel empty = new JLabel("No movies match your search.", SwingConstants.CENTER); // new *
+            JLabel empty = new JLabel("No movies match your search.", SwingConstants.CENTER);
             empty.setFont(new Font("Segoe UI", Font.ITALIC, 16));
             empty.setBorder(new EmptyBorder(50, 0, 0, 0));
             grid.add(empty);
         } else {
             for (Movie m : movies) {
-                grid.add(createMovieCard(m)); // reused *
+                grid.add(createMovieCard(m));
             }
         }
         grid.revalidate();
         grid.repaint();
     }
-
-
 
     // --- PAGE 2: ADD MOVIE ---
     private void showAddMoviePage() {
@@ -177,10 +183,8 @@ public class DashView extends JFrame {
         logoutBtn.setForeground(new Color(255, 100, 100));
         logoutBtn.addActionListener(e -> {
             dispose();
-            // Re-initialize Login View properly
             LoginView loginView = new LoginView();
             loginView.setController(controller);
-
             JFrame frame = new JFrame("CineRator");
             frame.setContentPane(loginView.getPanel());
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -194,7 +198,6 @@ public class DashView extends JFrame {
     }
 
     // --- MOVIE CARD ---
-    // FIX 3: Accept 'Movie' object to access ID, Title, Image, etc.
     private JPanel createMovieCard(Movie movie) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -207,7 +210,6 @@ public class DashView extends JFrame {
                 BorderFactory.createEmptyBorder(10,10,10,10)
         ));
 
-        // Use getters
         JLabel poster = loadPoster(movie.getImageUrl());
         poster.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -236,7 +238,6 @@ public class DashView extends JFrame {
         rateBtn.setFocusPainted(false);
         rateBtn.setMargin(new Insets(4, 10, 4, 10));
 
-        // FIX 4: Pass the whole movie object to the dialog
         rateBtn.addActionListener(e -> showRatingDialog(movie));
 
         ratingPanel.add(rateLbl, BorderLayout.WEST);
@@ -251,6 +252,65 @@ public class DashView extends JFrame {
         card.add(ratingPanel);
 
         return card;
+    }
+
+    // =================================================================================
+    // --- UPDATED: RATING DIALOG WITH COMMENTS ---
+    // =================================================================================
+    private void showRatingDialog(Movie movie) {
+        // 1. Create a nice Panel to hold inputs
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setPreferredSize(new Dimension(350, 200)); // Make it spacious
+
+        // 2. Rating Slider
+        JLabel scoreLbl = new JLabel("Score: 5/10");
+        scoreLbl.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        scoreLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JSlider slider = new JSlider(1, 10, 5);
+        slider.setMajorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.setAlignmentX(Component.LEFT_ALIGNMENT);
+        slider.addChangeListener(e -> scoreLbl.setText("Score: " + slider.getValue() + "/10"));
+
+        // 3. Comment Area
+        JLabel commentLbl = new JLabel("Your Review (Optional):");
+        commentLbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        commentLbl.setForeground(TEXT_DARK);
+        commentLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JTextArea commentArea = new JTextArea(4, 20);
+        commentArea.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        commentArea.setLineWrap(true);
+        commentArea.setWrapStyleWord(true);
+
+        JScrollPane scrollComment = new JScrollPane(commentArea);
+        scrollComment.setAlignmentX(Component.LEFT_ALIGNMENT);
+        scrollComment.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+
+        // 4. Add components to panel
+        panel.add(scoreLbl);
+        panel.add(Box.createVerticalStrut(5));
+        panel.add(slider);
+        panel.add(Box.createVerticalStrut(20)); // Spacer
+        panel.add(commentLbl);
+        panel.add(Box.createVerticalStrut(5));
+        panel.add(scrollComment);
+
+        // 5. Show Dialog
+        int result = JOptionPane.showConfirmDialog(this, panel, "Rate " + movie.getTitle(),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            int score = slider.getValue();
+            String comment = commentArea.getText().trim();
+
+            // Save both score and comment!
+            controller.saveUserRating(user.getId(), movie.getId(), (double) score, comment);
+            JOptionPane.showMessageDialog(this, "Review submitted!");
+        }
     }
 
     private JLabel loadPoster(String imageUrl) {
@@ -281,28 +341,6 @@ public class DashView extends JFrame {
             imageLabel.setText("Error");
         }
         return imageLabel;
-    }
-
-    // FIX 5: Use ID for saving rating
-    private void showRatingDialog(Movie movie) {
-        JPanel panel = new JPanel(new BorderLayout(0, 10));
-        panel.add(new JLabel("How many stars for " + movie.getTitle() + "?"), BorderLayout.NORTH);
-
-        JSlider slider = new JSlider(1, 10, 5);
-        slider.setMajorTickSpacing(1);
-        slider.setPaintTicks(true);
-        slider.setPaintLabels(true);
-        panel.add(slider, BorderLayout.CENTER);
-
-        int result = JOptionPane.showConfirmDialog(this, panel, "Rate Movie",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (result == JOptionPane.OK_OPTION) {
-            int score = slider.getValue();
-            // Call the correct method on controller: saveUserRating
-            controller.saveUserRating(user.getId(), movie.getId(), (double) score, "");
-            JOptionPane.showMessageDialog(this, "Rated " + score + "/10!");
-        }
     }
 
     private JButton createNavButton(String text) {
@@ -346,8 +384,6 @@ public class DashView extends JFrame {
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setForeground(TEXT_DARK);
 
-
-        //edited opan
         searchField = new JTextField(" Search movies...");
         searchField.setPreferredSize(new Dimension(250, 35));
         searchField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
@@ -356,20 +392,17 @@ public class DashView extends JFrame {
             @Override
             public void focusGained(FocusEvent e) {
                 if (searchField.getText().equals(" Search movies...")) {
-                    searchField.setText(" ");          // clear text
-                    searchField.setForeground(Color.BLACK); // normal typing color
+                    searchField.setText("");
+                    searchField.setForeground(Color.BLACK);
                 }
             }
-
             @Override
             public void focusLost(FocusEvent e) {
                 if (searchField.getText().isEmpty()) {
-                    searchField.setText(" Search movies..."); // restore placeholder
-                    searchField.setForeground(Color.GRAY);   // placeholder color
+                    searchField.setText(" Search movies...");
+                    searchField.setForeground(Color.GRAY);
                 }
             }
-
-
         });
 
         header.add(title, BorderLayout.WEST);
