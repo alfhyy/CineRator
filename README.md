@@ -91,10 +91,13 @@ Classic desktop interface with forms, tables, and dialogs.
           ├── pom.xml
           └── .gitignore
 ## 💻UI Preview
-<img width="391" height="248" alt="image" src="https://github.com/user-attachments/assets/95a7a43f-eb59-4d51-b485-80f54ea2e291" /> <img width="391" height="248" alt="image" src="https://github.com/user-attachments/assets/15748dcd-b503-4f77-bec0-97f846712aea" /><img width="373" height="291" alt="Screenshot 2025-12-21 203200" src="https://github.com/user-attachments/assets/15ce4f34-f753-4704-a80c-e2690775d88d" />
+<img width="391" height="248" alt="image" src="https://github.com/user-attachments/assets/e02068f2-4819-4ef2-8fe5-42fc2d58f4a7" /><img width="391" height="248" alt="image" src="https://github.com/user-attachments/assets/022f9ce3-2fe8-4439-b5d8-0480731b679e" />
 
 ### 🔐Login page 
 Offer username and password authentication with clean and centered layout, so program know who's login. A bold red "Sign in" button emphasizing action and urgency.
+Dont worry if u new here, u can straight to registration and get ur own user account, and rate all movies u want
+
+ <img width="391" height="248" alt="image" src="https://github.com/user-attachments/assets/15748dcd-b503-4f77-bec0-97f846712aea" /><img width="318" height="248" alt="Screenshot 2025-12-21 203200" src="https://github.com/user-attachments/assets/15ce4f34-f753-4704-a80c-e2690775d88d" />
 
 ### 📊Dashboard page 
 Presents two-pane layout, a sidebar navigation and main content area for movie and community inteeaction. Sidebar, includes the "CineRator" brand and intuitive menu options: Discover, Rated Movies, Add Movies which supports all element in movie rating app. Main panel show the "Community Movie List" with movie card displaying title, genres, and rating. Search bar offers user to find specific movie by related keyword, enhancing usability and engangement.
@@ -111,4 +114,5 @@ User can see movie they already rated, to review whats been rated. User also can
 ### 🎬Add Movie Page
 Offer user to add their favourite movie, by entering title, genre, rating(1-10), and poster to add more movie details, also add preview image to ensure the correct  image are inserted, simply by clicking add button, movie will appear on the dashboard.
 
+![Image](https://github.com/user-attachments/assets/3d2a3454-c604-47af-83e4-2ea88a366521)
 
