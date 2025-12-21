@@ -13,7 +13,7 @@
 ![GitHub forks](https://img.shields.io/github/forks/alfhyy/CineRator?style=social)
 
 App built wiwth Java 21 and Swing, what does it do??? Rating, review ur fav movies.
-rate 1-5 and share personal opinions, designed for simplicity, lightweight, and offline use. Using intuitive Swinng interface , user can browse movies view average ratings, and read community reviews.
+rate 1-10 and share personal opinions, designed for simplicity, lightweight, and offline use. Using intuitive Swinng interface , user can browse movies view average ratings, and read community reviews.
 ---
 
 
