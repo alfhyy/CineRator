@@ -3,6 +3,7 @@ package cinerator;
 import cinerator.model.Movie;
 import cinerator.model.Rating;
 import cinerator.model.User;
+import java.util.UUID;
 import cinerator.storage.ExcelStorage;
 //add opan
 import java.util.stream.Collectors;
@@ -30,6 +31,23 @@ public class AppController {
             throw new Exception("Incorrect password.");
         }
         return user;
+    }
+
+    public void registerUser(String username, String password) throws Exception {
+        if (username.isEmpty() || password.isEmpty()) {
+            throw new Exception("Fields cannot be empty.");
+        }
+
+        // 1. Check if username is taken
+        if (storage.findUserByUsername(username) != null) {
+            throw new Exception("Username already exists.");
+        }
+
+        // 2. Create new user with random ID
+        User newUser = new User(UUID.randomUUID().toString(), username, password);
+
+        // 3. Save to Excel
+        storage.saveUser(newUser);
     }
 
     // --- MOVIES ---
@@ -79,7 +97,6 @@ public class AppController {
                 })
                 .collect(Collectors.toList());
     }
-
 
     /**
      * Called by RatedView to populate the "Edit Rating" dialog

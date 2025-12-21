@@ -25,6 +25,7 @@ public class LoginView {
     private final Color ACCENT_COLOR = new Color(220, 85, 45);
     private final Color ACCENT_HOVER = new Color(200, 70, 30);
     private final Color FIELD_BORDER = new Color(210, 200, 195);
+    private final Color LINK_COLOR   = new Color(100, 100, 200);
 
     public LoginView() {
         mainPanel = new JPanel(new GridBagLayout());
@@ -63,14 +64,12 @@ public class LoginView {
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
         titleLabel.setForeground(TEXT_PRIMARY);
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        titleLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, titleLabel.getPreferredSize().height));
 
         // 2. Subtitle
         JLabel subLabel = new JLabel("Login to your account", SwingConstants.CENTER);
         subLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         subLabel.setForeground(TEXT_SECONDARY);
         subLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        subLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, subLabel.getPreferredSize().height));
 
         // 3. Inputs
         JLabel userLabel = createFieldLabel("Username");
@@ -86,6 +85,26 @@ public class LoginView {
         loginButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         loginButton.addActionListener(e -> handleLogin());
 
+        // 5. NEW: Register Link
+        JLabel registerLink = new JLabel("Don't have an account? Register");
+        registerLink.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        registerLink.setForeground(LINK_COLOR);
+        registerLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        registerLink.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Add hover effect and click action
+        registerLink.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                openRegisterView();
+            }
+            public void mouseEntered(MouseEvent e) {
+                registerLink.setForeground(ACCENT_COLOR); // Change color on hover
+            }
+            public void mouseExited(MouseEvent e) {
+                registerLink.setForeground(LINK_COLOR);
+            }
+        });
+
         // --- Assembly ---
         card.add(titleLabel);
         card.add(Box.createVerticalStrut(10));
@@ -100,19 +119,27 @@ public class LoginView {
         card.add(passwordField);
         card.add(Box.createVerticalStrut(40));
         card.add(loginButton);
+        card.add(Box.createVerticalStrut(15));
+        card.add(registerLink); // Add the link at the bottom
 
         return card;
+    }
+
+    private void openRegisterView() {
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(mainPanel);
+        RegisterView registerView = new RegisterView(controller);
+        frame.setContentPane(registerView.getPanel());
+        frame.revalidate();
+        frame.repaint();
     }
 
     // --- Helpers ---
 
     private JLabel createFieldLabel(String text) {
         JLabel label = new JLabel(text);
-        // Added font code back so it looks correct
         label.setFont(new Font("Segoe UI", Font.BOLD, 12));
         label.setForeground(TEXT_SECONDARY);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        label.setMaximumSize(new Dimension(Integer.MAX_VALUE, label.getPreferredSize().height));
         return label;
     }
 
@@ -125,7 +152,6 @@ public class LoginView {
     private JPasswordField createFlatPasswordField() {
         JPasswordField field = new JPasswordField(20);
         styleInput(field);
-        // Allow Enter key to submit
         field.addActionListener(e -> handleLogin());
         return field;
     }
@@ -164,12 +190,11 @@ public class LoginView {
             if (controller != null) {
                 User user = controller.login(username, password);
 
-                // --- FIXED NAME HERE (DashFrame, not DashView) ---
-                new DashView(controller, user).setVisible(true);
+                // Hide Login Frame and Open Dashboard
+                JFrame loginFrame = (JFrame) SwingUtilities.getWindowAncestor(mainPanel);
+                loginFrame.dispose();
 
-                SwingUtilities.getWindowAncestor(mainPanel).dispose();
-            } else {
-                System.out.println("Testing Mode: Login Clicked");
+                new DashView(controller, user);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(mainPanel, ex.getMessage(), "Login Failed", JOptionPane.ERROR_MESSAGE);
