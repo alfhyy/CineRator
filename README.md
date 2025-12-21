@@ -57,11 +57,40 @@ Classic desktop interface with forms, tables, and dialogs.
 
 ## 🚀 Installation
 
-### 1. **Clone the repository**
+###  Clone the repository
      ```bash
      git clone https://github.com/alfhyy/CineRator.git
      cd movie-rating-app
-## UI Preview
+## 📁Project Structure
+     cinerator/
+          ├── src/
+          │   └── main/
+          │       └── java/
+          │           └── cinerator/
+          │               ├── model/
+          │               │   ├── Movie.java
+          │               │   ├── Rating.java
+          │               │   └── User.java
+          │               ├── service/
+          │               │   ├── MovieService.java
+          │               │   ├── RatingService.java
+          │               │   └── UserService.java
+          │               ├── storage/
+          │               │   ├── ExcelStorage.java
+          │               │   └── StorageManager.java
+          │               ├── UI/
+          │               │   ├── AddMovieView.java
+          │               │   ├── DashView.java
+          │               │   ├── LoginView.java
+          │               │   └── RatedView.java
+          │               ├── AppController.java
+          │               └── Main.java
+          ├── resources/
+          ├── target/
+          ├── cinerator.xlsx
+          ├── pom.xml
+          └── .gitignore
+## 💻UI Preview
 <img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/95a7a43f-eb59-4d51-b485-80f54ea2e291" /> <img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/15748dcd-b503-4f77-bec0-97f846712aea" />
 ### 🔐Login page 
 Offer username and password authentication with clean and centered layout, so program know who's login. A bold red "Sign in" button emphasizing action and urgency.
@@ -69,11 +98,13 @@ Offer username and password authentication with clean and centered layout, so pr
 ### 📊Dashboard page 
 Presents two-pane layout, a sidebar navigation and main content area for movie and community inteeaction. Sidebar, includes the "CineRator" brand and intuitive menu options: Discover, Rated Movies, Add Movies which supports all element in movie rating app. Main panel show the "Community Movie List" with movie card displaying title, genres, and rating. Search bar offers user to find specific movie by related keyword, enhancing usability and engangement.
 
-<img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/1d650034-42e1-46d2-9c6a-6eb19f3082ab" /> <img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/1575d74a-ac5f-4038-af00-07f2fa1a4a56" /> <img width="267" height="297" alt="image" src="https://github.com/user-attachments/assets/58f9b2ee-ac98-40d7-a904-9a77c309d8e0" />
+<img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/1d650034-42e1-46d2-9c6a-6eb19f3082ab" />  <img width="267" height="297" alt="image" src="https://github.com/user-attachments/assets/58f9b2ee-ac98-40d7-a904-9a77c309d8e0" />
 
+### ⭐Rated Movies Page
+User can see movie they already rated, to review whats been rated. User also can click on the movie and add opinion/review about the movie
 
-### Rated Movies Page
-User can see movie they already rated, to review whats been rated. 
+<img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/1575d74a-ac5f-4038-af00-07f2fa1a4a56" />
+
 ### 🎬Add Movie Page
 Offer user to add their favourite movie, by entering title, genre, rating(1-10), and poster to add more movie details, also add preview image to ensure the correct  image are inserted, simply by clicking add button, movie will appear on the dashboard.
 
