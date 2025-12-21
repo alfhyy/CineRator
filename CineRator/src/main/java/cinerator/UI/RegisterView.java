@@ -1,4 +1,4 @@
-package cinerator.ui;
+package cinerator.UI;
 
 import cinerator.AppController;
 
@@ -27,6 +27,10 @@ public class RegisterView {
     private final Color FIELD_BORDER = new Color(210, 200, 195);
     private final Color LINK_COLOR   = new Color(100, 100, 200);
 
+    /**
+     *
+     * @param controller
+     */
     public RegisterView(AppController controller) {
         this.controller = controller;
         mainPanel = new JPanel(new GridBagLayout());
@@ -34,10 +38,18 @@ public class RegisterView {
         mainPanel.add(createCard());
     }
 
+    /**
+     *
+     * @return
+     */
     public JPanel getPanel() {
         return mainPanel;
     }
 
+    /**
+     *
+     * @return
+     */
     private JPanel createCard() {
         JPanel card = new JPanel() {
             @Override
@@ -148,6 +160,7 @@ public class RegisterView {
         }
     }
 
+
     private void goToLogin() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(mainPanel);
         LoginView login = new LoginView();
@@ -159,6 +172,11 @@ public class RegisterView {
 
     // --- Helpers (Duplicated from LoginView to match style) ---
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     private JLabel createFieldLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -167,18 +185,30 @@ public class RegisterView {
         return label;
     }
 
+    /**
+     *
+     * @return
+     */
     private JTextField createFlatField() {
         JTextField field = new JTextField(20);
         styleInput(field);
         return field;
     }
 
+    /**
+     *
+     * @return
+     */
     private JPasswordField createFlatPasswordField() {
         JPasswordField field = new JPasswordField(20);
         styleInput(field);
         return field;
     }
 
+    /**
+     *
+     * @param field
+     */
     private void styleInput(JTextField field) {
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         field.setForeground(TEXT_PRIMARY);
@@ -192,6 +222,10 @@ public class RegisterView {
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
 
+    /**
+     *
+     * @param btn
+     */
     private void styleButton(JButton btn) {
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btn.setBackground(ACCENT_COLOR);

@@ -1,4 +1,4 @@
-package cinerator.ui;
+package cinerator.UI;
 
 import cinerator.AppController;
 import cinerator.model.User;
@@ -25,6 +25,11 @@ public class RatedView extends JPanel {
     private final Color TEXT_GRAY  = new Color(120, 120, 120);
     private final Color RED_ACTION = new Color(200, 60, 60);
 
+    /**
+     *
+     * @param controller
+     * @param user
+     */
     public RatedView(AppController controller, User user) {
         this.controller = controller;
         this.user = user;
@@ -295,6 +300,11 @@ public class RatedView extends JPanel {
         repaint();
     }
 
+    /**
+     *
+     * @param titleText
+     * @return
+     */
     private JPanel createHeader(String titleText) {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(MAIN_BG);
@@ -306,6 +316,10 @@ public class RatedView extends JPanel {
         return header;
     }
 
+    /**
+     *
+     * @param spinner
+     */
     private void styleSpinner(JSpinner spinner) {
         JComponent editor = spinner.getEditor();
         if (editor instanceof JSpinner.DefaultEditor) {
@@ -318,6 +332,12 @@ public class RatedView extends JPanel {
         spinner.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
     }
 
+    /**
+     *
+     * @param imageUrl
+     * @param size
+     * @return
+     */
     private JLabel loadPoster(String imageUrl, Dimension size) {
         JLabel imageLabel = new JLabel();
         imageLabel.setPreferredSize(size);

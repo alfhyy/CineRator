@@ -1,7 +1,8 @@
-package cinerator.ui;
+package cinerator.UI;
 
 import cinerator.AppController;
 import cinerator.model.User;
+
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -27,20 +28,35 @@ public class LoginView {
     private final Color FIELD_BORDER = new Color(210, 200, 195);
     private final Color LINK_COLOR   = new Color(100, 100, 200);
 
+    /**
+     *
+     */
     public LoginView() {
         mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(BG_COLOR);
         mainPanel.add(createCard());
     }
 
+    /**
+     *
+     * @param controller
+     */
     public void setController(AppController controller) {
         this.controller = controller;
     }
 
+    /**
+     *
+     * @return
+     */
     public JPanel getPanel() {
         return mainPanel;
     }
 
+    /**
+     *
+     * @return
+     */
     private JPanel createCard() {
         JPanel card = new JPanel() {
             @Override
@@ -135,6 +151,11 @@ public class LoginView {
 
     // --- Helpers ---
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     private JLabel createFieldLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -143,12 +164,20 @@ public class LoginView {
         return label;
     }
 
+    /**
+     *
+     * @return
+     */
     private JTextField createFlatField() {
         JTextField field = new JTextField(20);
         styleInput(field);
         return field;
     }
 
+    /**
+     *
+     * @return
+     */
     private JPasswordField createFlatPasswordField() {
         JPasswordField field = new JPasswordField(20);
         styleInput(field);
@@ -156,6 +185,10 @@ public class LoginView {
         return field;
     }
 
+    /**
+     *
+     * @param field
+     */
     private void styleInput(JTextField field) {
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         field.setForeground(TEXT_PRIMARY);
@@ -169,6 +202,10 @@ public class LoginView {
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
 
+    /**
+     *
+     * @param btn
+     */
     private void styleButton(JButton btn) {
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btn.setBackground(ACCENT_COLOR);
@@ -182,6 +219,9 @@ public class LoginView {
         });
     }
 
+    /**
+     *
+     */
     private void handleLogin() {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword());
