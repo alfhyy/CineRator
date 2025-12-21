@@ -69,8 +69,11 @@ Offer username and password authentication with clean and centered layout, so pr
 ### 📊Dashboard page 
 Presents two-pane layout, a sidebar navigation and main content area for movie and community inteeaction. Sidebar, includes the "CineRator" brand and intuitive menu options: Discover, Rated Movies, Add Movies which supports all element in movie rating app. Main panel show the "Community Movie List" with movie card displaying title, genres, and rating. Search bar offers user to find specific movie by related keyword, enhancing usability and engangement.
 
-<img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/1575d74a-ac5f-4038-af00-07f2fa1a4a56" />
+<img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/1d650034-42e1-46d2-9c6a-6eb19f3082ab" /> <img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/1575d74a-ac5f-4038-af00-07f2fa1a4a56" /> <img width="267" height="297" alt="image" src="https://github.com/user-attachments/assets/58f9b2ee-ac98-40d7-a904-9a77c309d8e0" />
 
+
+### Rated Movies Page
+User can see movie they already rated, to review whats been rated. 
 ### 🎬Add Movie Page
 Offer user to add their favourite movie, by entering title, genre, rating(1-10), and poster to add more movie details, also add preview image to ensure the correct  image are inserted, simply by clicking add button, movie will appear on the dashboard.
 
