@@ -2,13 +2,18 @@ package cinerator;
 
 import cinerator.model.User;
 import cinerator.storage.ExcelStorage;
-import cinerator.ui.LoginView;
+import cinerator.UI.LoginView;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.util.UUID;
 
+
 public class Main {
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         // 1. Setup Error Catcher (Safety Net)
         // This forces any hidden UI crashes to print to the console

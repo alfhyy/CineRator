@@ -9,10 +9,20 @@ public class UserService {
 
     private final ExcelStorage storage;
 
+    /**
+     *
+     * @param storage
+     */
     public UserService(ExcelStorage storage) {
         this.storage = storage;
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     */
     public User login(String username, String password) {
 
         User user = storage.findUserByUsername(username);

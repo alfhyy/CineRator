@@ -91,12 +91,15 @@ Classic desktop interface with forms, tables, and dialogs.
           ├── pom.xml
           └── .gitignore
 ## 💻UI Preview
-<img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/95a7a43f-eb59-4d51-b485-80f54ea2e291" /> <img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/15748dcd-b503-4f77-bec0-97f846712aea" />
+<img width="391" height="248" alt="image" src="https://github.com/user-attachments/assets/95a7a43f-eb59-4d51-b485-80f54ea2e291" /> <img width="391" height="248" alt="image" src="https://github.com/user-attachments/assets/15748dcd-b503-4f77-bec0-97f846712aea" /><img width="373" height="291" alt="Screenshot 2025-12-21 203200" src="https://github.com/user-attachments/assets/15ce4f34-f753-4704-a80c-e2690775d88d" />
+
 ### 🔐Login page 
 Offer username and password authentication with clean and centered layout, so program know who's login. A bold red "Sign in" button emphasizing action and urgency.
 
 ### 📊Dashboard page 
 Presents two-pane layout, a sidebar navigation and main content area for movie and community inteeaction. Sidebar, includes the "CineRator" brand and intuitive menu options: Discover, Rated Movies, Add Movies which supports all element in movie rating app. Main panel show the "Community Movie List" with movie card displaying title, genres, and rating. Search bar offers user to find specific movie by related keyword, enhancing usability and engangement.
+### ⭐Rate Panel
+Show slider from 1-10 how good the movie was, also review box to share ur opinion.
 
 <img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/1d650034-42e1-46d2-9c6a-6eb19f3082ab" />  <img width="267" height="297" alt="image" src="https://github.com/user-attachments/assets/58f9b2ee-ac98-40d7-a904-9a77c309d8e0" />
 

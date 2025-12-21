@@ -5,7 +5,7 @@ import cinerator.model.Rating;
 import cinerator.model.User;
 import java.util.UUID;
 import cinerator.storage.ExcelStorage;
-//add opan
+
 import java.util.stream.Collectors;
 
 import java.util.ArrayList;
@@ -14,11 +14,23 @@ import java.util.List;
 public class AppController {
     private final ExcelStorage storage;
 
+    /**
+     *
+     * @param storage
+     */
     public AppController(ExcelStorage storage) {
         this.storage = storage;
     }
 
     // --- AUTH ---
+
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     * @throws Exception
+     */
     public User login(String username, String password) throws Exception {
         if (username.isEmpty() || password.isEmpty()) {
             throw new Exception("Please fill in all fields.");
@@ -33,7 +45,14 @@ public class AppController {
         return user;
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @throws Exception
+     */
     public void registerUser(String username, String password) throws Exception {
+
         if (username.isEmpty() || password.isEmpty()) {
             throw new Exception("Fields cannot be empty.");
         }
@@ -51,10 +70,28 @@ public class AppController {
     }
 
     // --- MOVIES ---
+
+    /**
+     *
+     * @param title
+     * @param genre
+     * @param imageUrl
+     * @param rating
+     */
     public void addMovie(String title, String genre, String imageUrl, String rating) {
         storage.saveMovie(title, genre, imageUrl, rating);
+        /**
+         * Gets all movies from storage.
+         *
+         * @return list of Movie objects
+         */
+
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Movie> getAllMovies() {
         // Ensure your Storage returns cinerator.model.Movie, not MovieRecord
         return storage.loadAllMovies();
@@ -84,7 +121,12 @@ public class AppController {
         }
         return filtered;
     }
-    //add opann
+
+    /**
+     *
+     * @param query
+     * @return
+     */
     public List<Movie> searchMovies(String query) {
         if (query == null) query = ""; // avoid null input
         String lowerQuery = query.trim().toLowerCase();
@@ -106,10 +148,22 @@ public class AppController {
         return storage.getRating(userId, movieId);
     }
 
+    /**
+     *
+     * @param userId
+     * @param movieId
+     * @param rating
+     * @param comment
+     */
     public void saveUserRating(String userId, String movieId, double rating, String comment) {
         storage.saveRating(userId, movieId, rating, comment);
     }
 
+    /**
+     *
+     * @param userId
+     * @param movieId
+     */
     public void deleteUserRating(String userId, String movieId) {
         storage.deleteRating(userId, movieId);
     }

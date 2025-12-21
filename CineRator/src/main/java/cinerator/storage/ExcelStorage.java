@@ -18,6 +18,11 @@ public class ExcelStorage {
     // --- USER METHODS ---
 
     // [FIXED] Added this method back
+
+    /**
+     *
+     * @param user
+     */
     public void saveUser(User user) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.USER_SHEET);
@@ -36,6 +41,11 @@ public class ExcelStorage {
         }
     }
 
+    /**
+     *
+     * @param username
+     * @return
+     */
     public User findUserByUsername(String username) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.USER_SHEET);
@@ -59,6 +69,13 @@ public class ExcelStorage {
 
     // --- MOVIE METHODS ---
 
+    /**
+     *
+     * @param title
+     * @param genre
+     * @param imageUrl
+     * @param initialRating
+     */
     public void saveMovie(String title, String genre, String imageUrl, String initialRating) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.MOVIE_SHEET);
@@ -77,6 +94,10 @@ public class ExcelStorage {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Movie> loadAllMovies() {
         List<Movie> movies = new ArrayList<>();
         try (Workbook wb = openWorkbook()) {
@@ -100,6 +121,13 @@ public class ExcelStorage {
 
     // --- RATING METHODS ---
 
+    /**
+     *
+     * @param userId
+     * @param movieId
+     * @param ratingVal
+     * @param comment
+     */
     public void saveRating(String userId, String movieId, double ratingVal, String comment) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.RATING_SHEET);
@@ -137,6 +165,12 @@ public class ExcelStorage {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
+    /**
+     *
+     * @param userId
+     * @param movieId
+     * @return
+     */
     public Rating getRating(String userId, String movieId) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.RATING_SHEET);
@@ -159,6 +193,11 @@ public class ExcelStorage {
         return null;
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public List<String> getUserRatedMovieIds(String userId) {
         List<String> ratedIds = new ArrayList<>();
         try (Workbook wb = openWorkbook()) {
@@ -178,6 +217,11 @@ public class ExcelStorage {
         return ratedIds;
     }
 
+    /**
+     *
+     * @param userId
+     * @param movieId
+     */
     public void deleteRating(String userId, String movieId) {
         try (Workbook wb = openWorkbook()) {
             Sheet sheet = wb.getSheet(StorageManager.RATING_SHEET);
@@ -201,6 +245,13 @@ public class ExcelStorage {
     }
 
     // Helper to safely get cell values as String
+
+    /**
+     *
+     * @param row
+     * @param index
+     * @return
+     */
     private String getCellValue(Row row, int index) {
         Cell cell = row.getCell(index);
         if (cell == null) return "";

@@ -1,4 +1,4 @@
-package cinerator.ui;
+package cinerator.UI;
 
 import cinerator.AppController;
 
@@ -19,6 +19,11 @@ public class AddMovieView extends JPanel {
     private JSpinner ratingSpinner;
     private JLabel imagePreview;
 
+    /**
+     *
+     * @param controller
+     * @param onSuccessCallback
+     */
     public AddMovieView(AppController controller, Runnable onSuccessCallback) {
         this.controller = controller;
         this.onSuccessCallback = onSuccessCallback;
@@ -66,6 +71,10 @@ public class AddMovieView extends JPanel {
 
         // Auto-load logic
         posterField.addFocusListener(new FocusAdapter() {
+            /**
+             *
+             * @param e the event to be processed
+             */
             public void focusLost(FocusEvent e) { updatePreview(posterField.getText()); }
         });
 
@@ -126,6 +135,10 @@ public class AddMovieView extends JPanel {
 
     // --- HELPERS ---
 
+    /**
+     *
+     * @param urlText
+     */
     private void updatePreview(String urlText) {
         if (urlText == null || urlText.isEmpty()) return;
         try {
@@ -140,6 +153,11 @@ public class AddMovieView extends JPanel {
     }
 
     // Helper: Ensure fields align left and stretch
+
+    /**
+     *
+     * @return
+     */
     private JTextField createStyledField() {
         JTextField field = new JTextField();
         field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35)); // FORCE FULL WIDTH
@@ -152,6 +170,11 @@ public class AddMovieView extends JPanel {
         return field;
     }
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     private JLabel createLabel(String text) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 12));

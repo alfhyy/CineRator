@@ -31,6 +31,10 @@ public class StorageManager {
         return workbook;
     }
 
+    /**
+     *
+     * @param workbook
+     */
     private static void createSheets(Workbook workbook) {
         createSheetWithHeader(workbook, MOVIE_SHEET,
                 "id", "title", "genre");
@@ -42,6 +46,10 @@ public class StorageManager {
                 "userId", "movieId", "rating");
     }
 
+    /**
+     *
+     * @param workbook
+     */
     private static void ensureSheetsExist(Workbook workbook) {
         if (workbook.getSheet(MOVIE_SHEET) == null)
             createSheetWithHeader(workbook, MOVIE_SHEET,
@@ -56,6 +64,12 @@ public class StorageManager {
                     "userId", "movieId", "rating");
     }
 
+    /**
+     *
+     * @param wb
+     * @param name
+     * @param headers
+     */
     private static void createSheetWithHeader(
             Workbook wb, String name, String... headers) {
 
@@ -67,6 +81,11 @@ public class StorageManager {
         }
     }
 
+    /**
+     *
+     * @param workbook
+     * @throws IOException
+     */
     public static void saveWorkbook(Workbook workbook) throws IOException {
         try (FileOutputStream fos = new FileOutputStream(EXCEL_FILE)) {
             workbook.write(fos);

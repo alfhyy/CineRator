@@ -1,4 +1,4 @@
-package cinerator.ui;
+package cinerator.UI;
 
 import cinerator.AppController;
 import cinerator.model.Movie;
@@ -33,6 +33,11 @@ public class DashView extends JFrame {
     private final Color ACCENT     = new Color(220, 85, 45);
     private final Color TEXT_DARK  = new Color(60, 45, 40);
 
+    /**
+     *
+     * @param controller
+     * @param user
+     */
     public DashView(AppController controller, User user) {
         this.controller = controller;
         this.user = user;
@@ -62,6 +67,10 @@ public class DashView extends JFrame {
         setVisible(true);
     }
 
+    /**
+     *
+     * @param newPage
+     */
     private void switchPage(JPanel newPage) {
         contentArea.removeAll();
         contentArea.add(newPage, BorderLayout.CENTER);
@@ -70,6 +79,7 @@ public class DashView extends JFrame {
     }
 
     // --- PAGE 1: DISCOVER ---
+
     private void showDiscoverPage() {
         JPanel page = new JPanel(new BorderLayout());
         page.setBackground(MAIN_BG);
@@ -124,6 +134,10 @@ public class DashView extends JFrame {
         updateGrid(filtered);
     }
 
+    /**
+     *
+     * @param movies
+     */
     private void updateGrid(List<Movie> movies) {
         grid.removeAll();
         if (movies.isEmpty()) {
@@ -141,12 +155,18 @@ public class DashView extends JFrame {
     }
 
     // --- PAGE 2: ADD MOVIE ---
+
     private void showAddMoviePage() {
         AddMovieView addPanel = new AddMovieView(controller, this::showDiscoverPage);
         switchPage(addPanel);
     }
 
     // --- SIDEBAR ---
+
+    /**
+     *
+     * @return
+     */
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
@@ -198,6 +218,12 @@ public class DashView extends JFrame {
     }
 
     // --- MOVIE CARD ---
+
+    /**
+     *
+     * @param movie
+     * @return
+     */
     private JPanel createMovieCard(Movie movie) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -257,6 +283,11 @@ public class DashView extends JFrame {
     // =================================================================================
     // --- UPDATED: RATING DIALOG WITH COMMENTS ---
     // =================================================================================
+
+    /**
+     *
+     * @param movie
+     */
     private void showRatingDialog(Movie movie) {
         // 1. Create a nice Panel to hold inputs
         JPanel panel = new JPanel();
@@ -313,6 +344,11 @@ public class DashView extends JFrame {
         }
     }
 
+    /**
+     *
+     * @param imageUrl
+     * @return
+     */
     private JLabel loadPoster(String imageUrl) {
         JLabel imageLabel = new JLabel();
         imageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -343,6 +379,11 @@ public class DashView extends JFrame {
         return imageLabel;
     }
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     private JButton createNavButton(String text) {
         JButton btn = new JButton(text);
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -368,6 +409,10 @@ public class DashView extends JFrame {
         return btn;
     }
 
+    /**
+     *
+     * @return
+     */
     private JPanel createGrid() {
         JPanel grid = new JPanel(new GridLayout(0, 4, 20, 20));
         grid.setBackground(MAIN_BG);
@@ -375,6 +420,11 @@ public class DashView extends JFrame {
         return grid;
     }
 
+    /**
+     *
+     * @param titleText
+     * @return
+     */
     private JPanel createHeader(String titleText) {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(MAIN_BG);
@@ -403,6 +453,8 @@ public class DashView extends JFrame {
                     searchField.setForeground(Color.GRAY);
                 }
             }
+
+
         });
 
         header.add(title, BorderLayout.WEST);
