@@ -64,7 +64,7 @@ Classic desktop interface with forms, tables, and dialogs.
 ## UI Preview
 <img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/95a7a43f-eb59-4d51-b485-80f54ea2e291" /> <img width="441" height="298" alt="image" src="https://github.com/user-attachments/assets/15748dcd-b503-4f77-bec0-97f846712aea" />
 ### 🔐Login page 
-offer username and password authentication with clean and centered layout, so program know who's login. A bold red "Sign in" button emphasizing action and urgency.
+Offer username and password authentication with clean and centered layout, so program know who's login. A bold red "Sign in" button emphasizing action and urgency.
 
 ### 📊Dashboard page 
 Presents two-pane layout, a sidebar navigation and main content area for movie and community inteeaction. Sidebar, includes the "CineRator" brand and intuitive menu options: Discover, Rated Movies, Add Movies which supports all element in movie rating app. Main panel show the "Community Movie List" with movie card displaying title, genres, and rating. Search bar offers user to find specific movie by related keyword, enhancing usability and engangement.
