@@ -4,6 +4,8 @@ import cinerator.model.Movie;
 import cinerator.model.Rating;
 import cinerator.model.User;
 import cinerator.storage.ExcelStorage;
+//add opan
+import java.util.stream.Collectors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +66,20 @@ public class AppController {
         }
         return filtered;
     }
+    //add opann
+    public List<Movie> searchMovies(String query) {
+        if (query == null) query = ""; // avoid null input
+        String lowerQuery = query.trim().toLowerCase();
+
+        return getAllMovies().stream()
+                .filter(m -> {
+                    String title = m.getTitle() != null ? m.getTitle().toLowerCase() : "";
+                    String genre = m.getGenre() != null ? m.getGenre().toLowerCase() : "";
+                    return title.contains(lowerQuery) || genre.contains(lowerQuery);
+                })
+                .collect(Collectors.toList());
+    }
+
 
     /**
      * Called by RatedView to populate the "Edit Rating" dialog

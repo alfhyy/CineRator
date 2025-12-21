@@ -6,7 +6,12 @@ import cinerator.model.User;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -15,6 +20,13 @@ public class DashView extends JFrame {
 
     private final AppController controller;
     private final User user;
+
+    //add opan
+    private JTextField searchField;
+    private JPanel grid;
+    private List<Movie> cachedMovies;
+
+
 
     private JPanel contentArea;
 
@@ -64,24 +76,26 @@ public class DashView extends JFrame {
     private void showDiscoverPage() {
         JPanel page = new JPanel(new BorderLayout());
         page.setBackground(MAIN_BG);
-        page.add(createHeader("Community Movie List"), BorderLayout.NORTH);
 
-        JPanel grid = createGrid();
+        // FIX 1: Create header and expose searchField
+        JPanel header = createHeader("Community Movie List");
+        page.add(header, BorderLayout.NORTH);
 
-        // FIX 1: Use List<Movie> and getters
-        List<Movie> movies = controller.getAllMovies();
+        // FIX 2: Attach live search listener to searchField
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { filterMovies(); } // new *
+            public void removeUpdate(DocumentEvent e) { filterMovies(); } // new *
+            public void changedUpdate(DocumentEvent e) { filterMovies(); } // new *
+        });
 
-        if (movies.isEmpty()) {
-            JLabel empty = new JLabel("No movies added yet. Go add one!", SwingConstants.CENTER);
-            empty.setFont(new Font("Segoe UI", Font.ITALIC, 16));
-            empty.setBorder(new EmptyBorder(50, 0, 0, 0));
-            grid.add(empty);
-        } else {
-            for (Movie m : movies) {
-                // FIX 2: Pass the whole Movie object so we have the ID for rating
-                grid.add(createMovieCard(m));
-            }
-        }
+        // FIX 3: Cache full movie list for filtering
+        cachedMovies = controller.getAllMovies(); // new *
+
+        // FIX 4: Make grid reusable for updates
+        grid = createGrid(); // new *
+
+        // FIX 5: Populate grid with full movie list
+        updateGrid(cachedMovies); // replaces manual loop below
 
         // Wrapper to prevent vertical stretching
         JPanel gridWrapper = new JPanel(new BorderLayout());
@@ -95,6 +109,30 @@ public class DashView extends JFrame {
         page.add(scroll, BorderLayout.CENTER);
         switchPage(page);
     }
+    private void filterMovies() {
+        String query = searchField.getText();
+        List<Movie> filtered = controller.searchMovies(query); // new *
+        updateGrid(filtered); // new *
+    }
+
+    //add opann
+    private void updateGrid(List<Movie> movies) {
+        grid.removeAll();
+        if (movies.isEmpty()) {
+            JLabel empty = new JLabel("No movies match your search.", SwingConstants.CENTER); // new *
+            empty.setFont(new Font("Segoe UI", Font.ITALIC, 16));
+            empty.setBorder(new EmptyBorder(50, 0, 0, 0));
+            grid.add(empty);
+        } else {
+            for (Movie m : movies) {
+                grid.add(createMovieCard(m)); // reused *
+            }
+        }
+        grid.revalidate();
+        grid.repaint();
+    }
+
+
 
     // --- PAGE 2: ADD MOVIE ---
     private void showAddMoviePage() {
@@ -308,13 +346,34 @@ public class DashView extends JFrame {
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setForeground(TEXT_DARK);
 
-        JTextField search = new JTextField(" Search movies...");
-        search.setPreferredSize(new Dimension(250, 35));
-        search.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
-        search.setForeground(Color.GRAY);
+
+        //edited opan
+        searchField = new JTextField(" Search movies...");
+        searchField.setPreferredSize(new Dimension(250, 35));
+        searchField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        searchField.setForeground(Color.GRAY);
+        searchField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (searchField.getText().equals(" Search movies...")) {
+                    searchField.setText(" ");          // clear text
+                    searchField.setForeground(Color.BLACK); // normal typing color
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (searchField.getText().isEmpty()) {
+                    searchField.setText(" Search movies..."); // restore placeholder
+                    searchField.setForeground(Color.GRAY);   // placeholder color
+                }
+            }
+
+
+        });
 
         header.add(title, BorderLayout.WEST);
-        header.add(search, BorderLayout.EAST);
+        header.add(searchField, BorderLayout.EAST);
         return header;
     }
 }
