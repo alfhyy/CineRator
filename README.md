@@ -25,9 +25,9 @@ rate 1-5 and share personal opinions, designed for simplicity, lightweight, and 
 Secure user authentication with username & password.
 
 🎬 Add movie  
-Users can add new movies to the database (title, year, genre).
+Users can add new movies to the database (title, genre, poster).
 
-⭐ Rate movie (1–5 stars)  
+⭐ Rate movie (1–10 stars)  
 Simple rating system with average score calculation.
 
 📝 Opinion / description  
