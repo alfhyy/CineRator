@@ -116,3 +116,8 @@ Offer user to add their favourite movie, by entering title, genre, rating(1-10),
 
 ![Image](https://github.com/user-attachments/assets/3d2a3454-c604-47af-83e4-2ea88a366521)
 
+### Author :
+### Viero Alfiandhy Havist (202410370110423) 
+### Ovan Keyva Kusumadewa (202410370110506)
+
+
